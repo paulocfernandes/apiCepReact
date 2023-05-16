@@ -16,10 +16,26 @@ export const CepForm = () => {
           </option>
         )
         setEstados(arrayEstados)
-
-
       })
   }
+
+  buscaCep = (e) => {
+
+    let cep = e.target.value;
+
+    axios.get('https://viacep.com.br/ws/${cep}/json/')
+    .then(function (response){
+      console.log(response.data);
+
+      setedereco({
+        ... endereco,
+        logradouro: response.data.bairro, localidade: response.data.localidade
+      })
+
+
+  }
+   
+  
 
 
   useEffect(() => {
@@ -39,13 +55,15 @@ export const CepForm = () => {
         <input type="text"
           placeholder='digite Cep' name='cep'
           id='cep'
+          onBlur={buscaCep}
         />
 
         <Label name='Logradouro' />
         <input type="text"
           placeholder='Digite nome da rua '
           name='logradouro'
-          id='logradouro' />
+          id='logradouro'
+          value={endereco.logradouro || ""} />
 
         <Label name='Numero' />
         <input type="text"
@@ -72,7 +90,7 @@ export const CepForm = () => {
 
         <select id="cidade">
           <option selected>Selecione...</option>
-          {estados}
+          {estados.sort()}
         </select>
       </form>
 
