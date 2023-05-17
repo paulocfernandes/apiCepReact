@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
-import { Label } from "./label"
+import { Label } from "./Label1"
 import axios from "axios"
 
 export const CepForm = () => {
   const [estados, setEstados] = useState([])
+  const [endereco, setEndereco] = useState ({})
 
 
   const getEstados = () => {
@@ -19,28 +20,33 @@ export const CepForm = () => {
       })
   }
 
-  buscaCep = (e) => {
+ 
+
+
+
+
+  const buscaCep = (e) => {
 
     let cep = e.target.value;
-
-    axios.get('https://viacep.com.br/ws/${cep}/json/')
-    .then(function (response){
-      console.log(response.data);
-
-      setedereco({
-        ... endereco,
-        logradouro: response.data.bairro, localidade: response.data.localidade
-      })
-
-
-  }
-   
+  axios
+  .get(`https://viacep.com.br/ws/${cep}/json/`)
+    .then ((response) => {
   
-
+      setEndereco({
+        ... endereco,
+        logradouro: response.data.logradouro,
+         localidade: response.data.localidade,
+        bairro:response.data.bairro, 
+        uf:response.data.uf,
+      });
+    });
+  };
+    
+    
 
   useEffect(() => {
-    console.log('teste')
-    getEstados()
+    
+   getEstados()
   }, [])
 
   return (
@@ -68,29 +74,33 @@ export const CepForm = () => {
         <Label name='Numero' />
         <input type="text"
           name='numero'
-          id='numero' />
+          id='numero' 
+          />
 
         <Label name='Bairro' />
         <input type="text"
           placeholder='Bairro'
           name='bairro'
-          id='bairro' />
+          id='bairro' 
+          value={endereco.bairro || ""}/>
 
 
         <Label name='Localidade' />
         <input type="text"
           placeholder='Localidade'
           name='localidade'
-          id='localidade' />
+          id='localidade'
+          value={endereco.localidade || ""} />
 
         <Label name='UF' />
         <input type="text"
           name='uf'
-          id='uf' />
+          id='uf'
+          value={endereco.uf || ""} />
 
         <select id="cidade">
           <option selected>Selecione...</option>
-          {estados.sort()}
+          {estados}
         </select>
       </form>
 
